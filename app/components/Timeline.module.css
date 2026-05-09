@@ -1,0 +1,51 @@
+.section {
+  width: 100%;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin-bottom: 8px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.item {
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #ececec;
+}
+
+.date {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #666;
+}
+
+.title {
+  margin: 4px 0 0;
+  font-size: 0.98rem;
+  color: #222;
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 0.92rem;
+  color: #444;
+}

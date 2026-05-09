@@ -3,6 +3,7 @@ import profile from "@/content/memorialProfile";
 import Candles from "@/app/components/Candles";
 import Condolences from "@/app/components/Condolences";
 import Memories from "@/app/components/Memories";
+import Timeline from "@/app/components/Timeline";
 import { getCandlesCount, listCondolences, listMemories } from "@/lib/db";
 import styles from "./page.module.css";
 
@@ -34,6 +35,7 @@ export default async function Home() {
         {profile.message && (
           <p className={styles.message}>{profile.message}</p>
         )}
+        <Timeline entries={profile.timeline} />
         <Candles initialCount={count} />
         <Condolences initialEntries={condolences} />
         <Memories initialEntries={memories} />
