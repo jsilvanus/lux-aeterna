@@ -1,8 +1,22 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import Image from "next/image";
 import profile from "@/content/memorialProfile";
+import Candles from "@/app/components/Candles";
+import Condolences from "@/app/components/Condolences";
+import Memories from "@/app/components/Memories";
 import styles from "./page.module.css";
 
+function readData(filename) {
+  const filePath = join(process.cwd(), "data", filename);
+  return JSON.parse(readFileSync(filePath, "utf8"));
+}
+
 export default function Home() {
+  const candles = readData("candles.json");
+  const condolences = readData("condolences.json");
+  const memories = readData("memories.json");
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -22,6 +36,9 @@ export default function Home() {
         {profile.message && (
           <p className={styles.message}>{profile.message}</p>
         )}
+        <Candles initialCount={candles.count} />
+        <Condolences initialEntries={condolences} />
+        <Memories initialEntries={memories} />
       </main>
     </div>
   );
