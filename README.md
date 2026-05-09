@@ -10,7 +10,7 @@ In memoriam app built with Next.js.
   - birth/death dates
   - tribute text
   - centered portrait image
-- Local content model in `/home/runner/work/lux-aeterna/lux-aeterna/content/memorialProfile.js`
+- Local content model in `content/memorialProfile.js`
 - Mobile-first responsive and accessible presentation
 - Static rendering (`force-static`) for fast, reliable delivery
 
@@ -25,7 +25,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## How to update memorial content
 
-Edit `/home/runner/work/lux-aeterna/lux-aeterna/content/memorialProfile.js`:
+Edit `content/memorialProfile.js`:
 
 - `title`
 - `name`
@@ -34,7 +34,7 @@ Edit `/home/runner/work/lux-aeterna/lux-aeterna/content/memorialProfile.js`:
 - `tribute`
 - `image.src` and `image.alt`
 
-Place your actual portrait image in `/home/runner/work/lux-aeterna/lux-aeterna/public/images/` and point `image.src` to it.
+Place your actual portrait image in `public/images/` and point `image.src` to it.
 
 ## Future phases
 
