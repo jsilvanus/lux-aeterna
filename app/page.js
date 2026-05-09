@@ -1,21 +1,19 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import Image from "next/image";
 import profile from "@/content/memorialProfile";
 import Candles from "@/app/components/Candles";
 import Condolences from "@/app/components/Condolences";
 import Memories from "@/app/components/Memories";
+import { getCandlesCount, listCondolences, listMemories } from "@/lib/db";
 import styles from "./page.module.css";
 
-function readData(filename) {
-  const filePath = join(process.cwd(), "data", filename);
-  return JSON.parse(readFileSync(filePath, "utf8"));
-}
+export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const candles = readData("candles.json");
-  const condolences = readData("condolences.json");
-  const memories = readData("memories.json");
+export default async function Home() {
+  const [count, condolences, memories] = await Promise.all([
+    getCandlesCount(),
+    listCondolences(),
+    listMemories(),
+  ]);
 
   return (
     <div className={styles.page}>
@@ -36,7 +34,7 @@ export default function Home() {
         {profile.message && (
           <p className={styles.message}>{profile.message}</p>
         )}
-        <Candles initialCount={candles.count} />
+        <Candles initialCount={count} />
         <Condolences initialEntries={condolences} />
         <Memories initialEntries={memories} />
       </main>

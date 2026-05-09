@@ -2,16 +2,18 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Set the PostgreSQL connection string:
+
+```bash
+export DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB_NAME"
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build && npm run start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -19,6 +21,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
 This project uses system fonts (`Arial, Helvetica, sans-serif`) to avoid external font network dependencies.
+
+## Data storage
+
+The app uses PostgreSQL for:
+
+- candle count (`candles` table)
+- condolences (`condolences` table)
+- memories (`memories` table)
+
+Tables are created automatically on first request if they do not exist.
 
 ## Learn More
 
