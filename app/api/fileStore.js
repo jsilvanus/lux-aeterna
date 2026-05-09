@@ -13,6 +13,11 @@ export function writeJSON(filePath, data) {
 /**
  * Serialise async writes to the same file path so concurrent requests
  * do not interleave reads and writes (within a single process).
+ *
+ * NOTE: This does NOT protect against race conditions across multiple
+ * processes or server instances (e.g. horizontal scaling, serverless).
+ * For multi-instance deployments, use a database with atomic operations
+ * or a distributed locking mechanism instead.
  */
 export async function withFileLock(filePath, fn) {
   const previous = locks.get(filePath) ?? Promise.resolve();

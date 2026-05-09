@@ -25,8 +25,14 @@ export default function Condolences({ initialEntries }) {
         body: JSON.stringify({ name: name.trim(), message: message.trim() }),
       });
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error ?? "Something went wrong.");
+        let errorMessage = "Something went wrong.";
+        try {
+          const data = await res.json();
+          errorMessage = data.error ?? errorMessage;
+        } catch {
+          // non-JSON error body; keep default message
+        }
+        setError(errorMessage);
         return;
       }
       const entry = await res.json();
