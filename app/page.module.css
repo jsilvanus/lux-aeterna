@@ -1,0 +1,83 @@
+.page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: linear-gradient(180deg, #fcfaf7 0%, #f7f2ea 100%);
+}
+
+.card {
+  width: min(100%, 48rem);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5ddd1;
+  border-radius: 1rem;
+  box-shadow: 0 10px 36px rgba(40, 33, 24, 0.08);
+  padding: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+  text-align: center;
+  color: #2d241a;
+}
+
+.header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.kicker {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6e5d49;
+}
+
+.name {
+  font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.dates {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #4d3f2e;
+}
+
+.separator {
+  color: #8b775f;
+}
+
+.figure {
+  margin: 1.5rem auto 1.25rem;
+  width: min(100%, 24rem);
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  border: 1px solid #ddcfbb;
+  object-fit: cover;
+}
+
+.tribute {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #3f3225;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1.25rem 1rem;
+  }
+
+  .dates {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .separator {
+    display: none;
+  }
+}

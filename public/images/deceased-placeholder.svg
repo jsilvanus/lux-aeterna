@@ -1,0 +1,16 @@
+<svg width="900" height="900" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Memorial portrait placeholder</title>
+  <desc id="desc">A soft, respectful placeholder image for a memorial portrait.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EFE4D4"/>
+      <stop offset="100%" stop-color="#D7C1A2"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="900" fill="url(#bg)"/>
+  <circle cx="450" cy="350" r="145" fill="#F9F3EC" opacity="0.85"/>
+  <path d="M206 780C206 633 315 530 450 530C585 530 694 633 694 780V900H206V780Z" fill="#F9F3EC" opacity="0.85"/>
+  <text x="450" y="860" text-anchor="middle" font-family="Georgia, serif" font-size="42" fill="#5C4B39">
+    Portrait Placeholder
+  </text>
+</svg>
