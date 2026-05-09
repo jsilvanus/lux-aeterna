@@ -1,34 +1,33 @@
-import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { randomUUID } from "crypto";
+import { readJSON, writeJSON, withFileLock } from "../fileStore";
 
 const filePath = join(process.cwd(), "data", "condolences.json");
 
-function readData() {
-  return JSON.parse(readFileSync(filePath, "utf8"));
-}
-
-function writeData(data) {
-  writeFileSync(filePath, JSON.stringify(data, null, 2));
-}
+const MAX_NAME = 80;
+const MAX_MESSAGE = 500;
 
 export async function GET() {
-  const data = readData();
+  const data = readJSON(filePath);
   return Response.json(data);
 }
 
 export async function POST(request) {
   const body = await request.json();
-  const name = (body.name ?? "").trim();
-  const message = (body.message ?? "").trim();
+  const name = (body.name ?? "").trim().slice(0, MAX_NAME);
+  const message = (body.message ?? "").trim().slice(0, MAX_MESSAGE);
 
   if (!name || !message) {
     return Response.json({ error: "Name and message are required." }, { status: 400 });
   }
 
-  const data = readData();
-  const entry = { id: Date.now(), name, message, date: new Date().toISOString() };
-  data.push(entry);
-  writeData(data);
+  const entry = await withFileLock(filePath, () => {
+    const data = readJSON(filePath);
+    const newEntry = { id: randomUUID(), name, message, date: new Date().toISOString() };
+    data.push(newEntry);
+    writeJSON(filePath, data);
+    return newEntry;
+  });
 
   return Response.json(entry, { status: 201 });
 }
