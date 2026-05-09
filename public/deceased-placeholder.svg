@@ -1,0 +1,8 @@
+<svg width="320" height="420" viewBox="0 0 320 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="420" fill="#EDE7DF" />
+  <circle cx="160" cy="145" r="70" fill="#C8B8A6" />
+  <path d="M70 350C70 287.039 121.039 236 184 236H136C198.961 236 250 287.039 250 350V380H70V350Z" fill="#C8B8A6" />
+  <text x="160" y="405" text-anchor="middle" fill="#6B5E4E" font-family="Arial, Helvetica, sans-serif" font-size="16">
+    In loving memory
+  </text>
+</svg>
