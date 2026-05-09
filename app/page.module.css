@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 
 .title {
@@ -30,4 +30,27 @@
   height: auto;
   border-radius: 12px;
   border: 1px solid #dedede;
+}
+
+.name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1f1f1f;
+  text-align: center;
+}
+
+.dates {
+  font-size: 0.95rem;
+  color: #666;
+  text-align: center;
+}
+
+.message {
+  font-size: 1rem;
+  color: #444;
+  text-align: center;
+  font-style: italic;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  width: 100%;
 }

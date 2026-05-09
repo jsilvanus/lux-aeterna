@@ -1,4 +1,5 @@
 import Image from "next/image";
+import profile from "@/content/memorialProfile";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -7,13 +8,20 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>In memoriam</h1>
         <Image
-          src="/deceased-placeholder.svg"
-          alt="Portrait of the deceased"
+          src={profile.photo}
+          alt={profile.photoAlt}
           width={320}
           height={420}
           priority
           className={styles.memorialImage}
         />
+        <h2 className={styles.name}>{profile.name}</h2>
+        <p className={styles.dates}>
+          {profile.born} &ndash; {profile.passed}
+        </p>
+        {profile.message && (
+          <p className={styles.message}>{profile.message}</p>
+        )}
       </main>
     </div>
   );
