@@ -35,7 +35,10 @@ export default async function Home() {
         {profile.message && (
           <p className={styles.message}>{profile.message}</p>
         )}
-        <Timeline entries={profile.timeline} />
+        <Timeline
+          entries={profile.timeline}
+          memoryEntries={profile.showMemoriesOnTimeline ? memories : []}
+        />
         <Candles initialCount={count} />
         <Condolences initialEntries={condolences} />
         <Memories initialEntries={memories} />

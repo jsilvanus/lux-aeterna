@@ -49,3 +49,19 @@
   font-size: 0.92rem;
   color: #444;
 }
+
+.memoryItem {
+  padding: 8px;
+  background: #fcfcfc;
+  border-style: dashed;
+}
+
+.memoryTitle {
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.memoryDescription {
+  font-size: 0.84rem;
+  color: #555;
+}

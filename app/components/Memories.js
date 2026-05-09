@@ -3,9 +3,36 @@
 import { useState } from "react";
 import styles from "./EntryList.module.css";
 
+function formatMemoryDate(value) {
+  if (!value) {
+    return "";
+  }
+
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (match) {
+    const [, year, month, day] = match;
+    return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))).toLocaleDateString(
+      undefined,
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      },
+    );
+  }
+
+  return new Date(value).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 export default function Memories({ initialEntries }) {
   const [entries, setEntries] = useState(initialEntries);
-  const [name, setName] = useState("");
+  const [author, setAuthor] = useState("");
+  const [memoryDate, setMemoryDate] = useState(new Date().toISOString().slice(0, 10));
   const [memory, setMemory] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -13,8 +40,8 @@ export default function Memories({ initialEntries }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    if (!name.trim() || !memory.trim()) {
-      setError("Please fill in your name and memory.");
+    if (!author.trim() || !memoryDate || !memory.trim()) {
+      setError("Please fill in author, date, and memory.");
       return;
     }
     setSubmitting(true);
@@ -22,7 +49,11 @@ export default function Memories({ initialEntries }) {
       const res = await fetch("/api/memories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), memory: memory.trim() }),
+        body: JSON.stringify({
+          author: author.trim(),
+          memoryDate,
+          memory: memory.trim(),
+        }),
       });
       if (!res.ok) {
         let errorMessage = "Something went wrong.";
@@ -37,7 +68,7 @@ export default function Memories({ initialEntries }) {
       }
       const entry = await res.json();
       setEntries((prev) => [...prev, entry]);
-      setName("");
+      setAuthor("");
       setMemory("");
     } finally {
       setSubmitting(false);
@@ -52,11 +83,18 @@ export default function Memories({ initialEntries }) {
         <input
           className={styles.input}
           type="text"
-          placeholder="Your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Author name"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
           maxLength={80}
-          aria-label="Your name"
+          aria-label="Author name"
+        />
+        <input
+          className={styles.input}
+          type="date"
+          value={memoryDate}
+          onChange={(e) => setMemoryDate(e.target.value)}
+          aria-label="Date of memory"
         />
         <textarea
           className={styles.textarea}
@@ -77,14 +115,13 @@ export default function Memories({ initialEntries }) {
         <ul className={styles.list}>
           {entries.map((entry) => (
             <li key={entry.id} className={styles.item}>
-              <strong className={styles.itemName}>{entry.name}</strong>
+              <strong className={styles.itemName}>{entry.author ?? entry.name}</strong>
               <p className={styles.itemText}>{entry.memory}</p>
-              <time className={styles.itemDate} dateTime={entry.date}>
-                {new Date(entry.date).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+              <time
+                className={styles.itemDate}
+                dateTime={entry.memoryDate ?? entry.date?.slice(0, 10)}
+              >
+                {formatMemoryDate(entry.memoryDate ?? entry.date)}
               </time>
             </li>
           ))}

@@ -5,6 +5,7 @@ const memorialProfile = {
   photo: "/deceased-placeholder.svg",
   photoAlt: "Portrait of the deceased",
   message: "Forever in our hearts.",
+  showMemoriesOnTimeline: false,
   timeline: [
     {
       year: 1940,
