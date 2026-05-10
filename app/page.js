@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import profile from "@/content/memorialProfile";
 import Candles from "@/app/components/Candles";
 import Condolences from "@/app/components/Condolences";
 import Memories from "@/app/components/Memories";
 import Timeline from "@/app/components/Timeline";
 import { getCandlesCount, listCondolences, listMemories } from "@/lib/db";
+import { getPublicFeatureFlags } from "@/lib/featureFlags";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +17,7 @@ export default async function Home() {
     listCondolences(),
     listMemories(),
   ]);
+  const featureFlags = getPublicFeatureFlags();
 
   return (
     <div className={styles.page}>
@@ -38,10 +41,18 @@ export default async function Home() {
         <Timeline
           entries={profile.timeline}
           memoryEntries={profile.showMemoriesOnTimeline ? memories : []}
+          enableImages={featureFlags.imagesEnabled}
         />
+        <Link className={styles.timelineLink} href="/timeline">
+          View full timeline
+        </Link>
         <Candles initialCount={count} />
         <Condolences initialEntries={condolences} />
-        <Memories initialEntries={memories} />
+        <Memories
+          initialEntries={memories}
+          enableImages={featureFlags.imagesEnabled}
+          enableImageUpload={featureFlags.imageUploadEnabled}
+        />
       </main>
     </div>
   );

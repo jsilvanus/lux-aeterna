@@ -13,12 +13,14 @@ const memorialProfile = {
       day: 1,
       title: "Born",
       description: "Entered the world surrounded by family.",
+      images: ["/deceased-placeholder.svg"],
     },
     {
       year: 1962,
       month: 6,
       title: "Graduated",
       description: "Completed university and began a lifelong career.",
+      image: "/deceased-placeholder.svg",
     },
     {
       year: 1968,

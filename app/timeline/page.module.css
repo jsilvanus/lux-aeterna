@@ -1,0 +1,39 @@
+.page {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background: #f4f1ee;
+  padding: 20px;
+}
+
+.main {
+  width: min(100%, 840px);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.title {
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  color: #1f1f1f;
+}
+
+.subtitle {
+  font-size: 0.92rem;
+  color: #666;
+}
+
+.backLink {
+  align-self: flex-start;
+  margin-top: 6px;
+  border: 1px solid #e9dcc6;
+  border-radius: 8px;
+  background: #fdf6ec;
+  color: #7a5c2e;
+  padding: 6px 10px;
+  font-size: 0.88rem;
+}

@@ -3,6 +3,9 @@
 import { useState } from "react";
 import styles from "./EntryList.module.css";
 
+const MAX_IMAGES = 8;
+const MAX_UPLOAD_FILE_SIZE = 5 * 1024 * 1024;
+
 function formatMemoryDate(value) {
   if (!value) {
     return "";
@@ -29,11 +32,34 @@ function formatMemoryDate(value) {
   });
 }
 
-export default function Memories({ initialEntries }) {
+function parseImageUrls(value) {
+  return value
+    .split(/\r?\n|,/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, MAX_IMAGES);
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("Could not read uploaded file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+export default function Memories({
+  initialEntries,
+  enableImages = false,
+  enableImageUpload = false,
+}) {
   const [entries, setEntries] = useState(initialEntries);
   const [author, setAuthor] = useState("");
   const [memoryDate, setMemoryDate] = useState(new Date().toISOString().slice(0, 10));
   const [memory, setMemory] = useState("");
+  const [imageUrls, setImageUrls] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -46,6 +72,19 @@ export default function Memories({ initialEntries }) {
     }
     setSubmitting(true);
     try {
+      const parsedUrls = enableImages ? parseImageUrls(imageUrls) : [];
+      let uploadedImageData = [];
+
+      if (enableImages && enableImageUpload && uploadedFiles.length > 0) {
+        const oversized = uploadedFiles.find((file) => file.size > MAX_UPLOAD_FILE_SIZE);
+        if (oversized) {
+          setError(`Uploaded file "${oversized.name}" exceeds the 5MB limit.`);
+          return;
+        }
+        uploadedImageData = await Promise.all(uploadedFiles.map((file) => fileToDataUrl(file)));
+      }
+
+      const images = [...parsedUrls, ...uploadedImageData].slice(0, MAX_IMAGES);
       const res = await fetch("/api/memories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,6 +92,7 @@ export default function Memories({ initialEntries }) {
           author: author.trim(),
           memoryDate,
           memory: memory.trim(),
+          images,
         }),
       });
       if (!res.ok) {
@@ -70,6 +110,8 @@ export default function Memories({ initialEntries }) {
       setEntries((prev) => [...prev, entry]);
       setAuthor("");
       setMemory("");
+      setImageUrls("");
+      setUploadedFiles([]);
     } finally {
       setSubmitting(false);
     }
@@ -105,6 +147,26 @@ export default function Memories({ initialEntries }) {
           maxLength={1000}
           aria-label="Share a memory"
         />
+        {enableImages && (
+          <textarea
+            className={styles.textarea}
+            placeholder="Optional image URLs (one per line or comma-separated)"
+            value={imageUrls}
+            onChange={(e) => setImageUrls(e.target.value)}
+            rows={2}
+            aria-label="Memory image URLs"
+          />
+        )}
+        {enableImages && enableImageUpload && (
+          <input
+            className={styles.input}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => setUploadedFiles(Array.from(e.target.files ?? []).slice(0, MAX_IMAGES))}
+            aria-label="Upload memory images"
+          />
+        )}
         {error && <p className={styles.error}>{error}</p>}
         <button className={styles.submitBtn} type="submit" disabled={submitting}>
           {submitting ? "Saving…" : "Share memory"}
@@ -117,6 +179,19 @@ export default function Memories({ initialEntries }) {
             <li key={entry.id} className={styles.item}>
               <strong className={styles.itemName}>{entry.author ?? entry.name}</strong>
               <p className={styles.itemText}>{entry.memory}</p>
+              {enableImages && Array.isArray(entry.images) && entry.images.length > 0 && (
+                <div className={styles.itemImages}>
+                  {entry.images.map((image, index) => (
+                    <img
+                      key={`${entry.id}-image-${index}`}
+                      className={styles.itemImage}
+                      src={image}
+                      alt={`Memory by ${entry.author ?? entry.name}`}
+                      loading="lazy"
+                    />
+                  ))}
+                </div>
+              )}
               <time
                 className={styles.itemDate}
                 dateTime={entry.memoryDate ?? entry.date?.slice(0, 10)}

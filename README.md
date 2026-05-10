@@ -8,6 +8,17 @@ Set the PostgreSQL connection string:
 export DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB_NAME"
 ```
 
+Optional feature flags:
+
+```bash
+# Enable image support for timeline events and memory entries
+export ENABLE_IMAGES=true
+
+# Enable image uploads (data URLs) in memory submission form
+# (requires ENABLE_IMAGES=true)
+export ENABLE_IMAGE_UPLOAD=true
+```
+
 Then run the development server:
 
 ```bash
@@ -20,6 +31,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
+There is also a full timeline view at `/timeline` that renders events in a flowing "snake-like" layout.
+
 This project uses system fonts (`Arial, Helvetica, sans-serif`) to avoid external font network dependencies.
 
 ## Data storage
@@ -29,6 +42,8 @@ The app uses PostgreSQL for:
 - candle count (`candles` table)
 - condolences (`condolences` table)
 - memories (`memories` table)
+
+Memory entries include author, memory date, and optional image URLs. Timeline events in `content/memorialProfile.js` may also include `image` or `images` fields.
 
 Tables are created automatically on first request if they do not exist.
 

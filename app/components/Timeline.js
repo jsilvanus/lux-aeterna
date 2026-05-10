@@ -57,7 +57,24 @@ function formatMemoryDate(value) {
   });
 }
 
-export default function Timeline({ entries = [], memoryEntries = [] }) {
+function normalizeImages(images, image) {
+  if (Array.isArray(images)) {
+    return images.filter((value) => typeof value === "string" && value.trim()).map((value) => value.trim());
+  }
+
+  if (typeof image === "string" && image.trim()) {
+    return [image.trim()];
+  }
+
+  return [];
+}
+
+export default function Timeline({
+  entries = [],
+  memoryEntries = [],
+  enableImages = false,
+  variant = "compact",
+}) {
   const mergedEntries = [
     ...entries.map((entry, index) => ({
       id: `timeline-${index}`,
@@ -66,6 +83,7 @@ export default function Timeline({ entries = [], memoryEntries = [] }) {
       dateLabel: formatDate(entry),
       title: entry.title,
       description: entry.description,
+      images: normalizeImages(entry.images, entry.image),
     })),
     ...memoryEntries.map((entry) => {
       const memoryDate = entry.memoryDate ?? entry.date?.slice(0, 10) ?? "";
@@ -76,6 +94,7 @@ export default function Timeline({ entries = [], memoryEntries = [] }) {
         dateLabel: formatMemoryDate(memoryDate),
         title: `Memory from ${entry.author ?? entry.name}`,
         description: entry.memory,
+        images: normalizeImages(entry.images),
       };
     }),
   ].sort((a, b) => a.sortKey - b.sortKey);
@@ -87,11 +106,11 @@ export default function Timeline({ entries = [], memoryEntries = [] }) {
   return (
     <section className={styles.section}>
       <h2 className={styles.heading}>🕰 Timeline</h2>
-      <ul className={styles.list}>
+      <ul className={`${styles.list} ${variant === "snake" ? styles.snakeList : ""}`}>
         {mergedEntries.map((entry) => (
           <li
             key={entry.id}
-            className={`${styles.item} ${entry.kind === "memory" ? styles.memoryItem : ""}`}
+            className={`${styles.item} ${entry.kind === "memory" ? styles.memoryItem : ""} ${variant === "snake" ? styles.snakeItem : ""}`}
           >
             {entry.dateLabel && <p className={styles.date}>{entry.dateLabel}</p>}
             <h3 className={`${styles.title} ${entry.kind === "memory" ? styles.memoryTitle : ""}`}>
@@ -103,6 +122,19 @@ export default function Timeline({ entries = [], memoryEntries = [] }) {
               >
                 {entry.description}
               </p>
+            )}
+            {enableImages && entry.images.length > 0 && (
+              <div className={styles.images}>
+                {entry.images.map((image, imageIndex) => (
+                  <img
+                    key={`${entry.id}-image-${imageIndex}`}
+                    className={styles.image}
+                    src={image}
+                    alt={entry.title}
+                    loading="lazy"
+                  />
+                ))}
+              </div>
             )}
           </li>
         ))}
