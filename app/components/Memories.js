@@ -182,6 +182,7 @@ export default function Memories({
               {enableImages && Array.isArray(entry.images) && entry.images.length > 0 && (
                 <div className={styles.itemImages}>
                   {entry.images.map((image, index) => (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       key={`${entry.id}-image-${index}`}
                       className={styles.itemImage}

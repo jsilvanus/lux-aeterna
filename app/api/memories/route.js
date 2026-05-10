@@ -4,7 +4,8 @@ import { imageUploadEnabled, imagesEnabled } from "@/lib/featureFlags";
 const MAX_AUTHOR = 80;
 const MAX_MEMORY = 1000;
 const MAX_IMAGES = 8;
-const MAX_IMAGE_VALUE_LENGTH = 20_000_000;
+const MAX_IMAGE_URL_LENGTH = 2048;
+const MAX_DATA_IMAGE_LENGTH = 8_000_000;
 
 function isAllowedImageUrl(value) {
   try {
@@ -16,7 +17,7 @@ function isAllowedImageUrl(value) {
 }
 
 function isAllowedDataImage(value) {
-  return /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=\s]+$/.test(value);
+  return /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=]+$/.test(value);
 }
 
 function parseImages(rawImages) {
@@ -77,17 +78,19 @@ export async function POST(request) {
   }
 
   for (const value of imageValues) {
-    if (value.length > MAX_IMAGE_VALUE_LENGTH) {
-      return Response.json({ error: "One or more images are too large." }, { status: 400 });
-    }
-
     if (value.startsWith("data:image/")) {
+      if (value.length > MAX_DATA_IMAGE_LENGTH) {
+        return Response.json({ error: "One or more uploaded images are too large." }, { status: 400 });
+      }
       if (!isAllowedDataImage(value)) {
         return Response.json({ error: "Invalid uploaded image format." }, { status: 400 });
       }
       continue;
     }
 
+    if (value.length > MAX_IMAGE_URL_LENGTH) {
+      return Response.json({ error: "Image URL is too long." }, { status: 400 });
+    }
     if (!isAllowedImageUrl(value)) {
       return Response.json({ error: "Only valid image URLs are allowed." }, { status: 400 });
     }

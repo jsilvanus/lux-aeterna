@@ -126,6 +126,7 @@ export default function Timeline({
             {enableImages && entry.images.length > 0 && (
               <div className={styles.images}>
                 {entry.images.map((image, imageIndex) => (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={`${entry.id}-image-${imageIndex}`}
                     className={styles.image}
