@@ -87,13 +87,19 @@ export default function Timeline({
     })),
     ...memoryEntries.map((entry) => {
       const memoryDate = entry.memoryDate ?? entry.date?.slice(0, 10) ?? "";
+      const hasMessage = typeof entry.message === "string" && entry.message.trim();
+      const memoryText = typeof entry.memory === "string" ? entry.memory : "";
       return {
         id: `memory-${entry.id}`,
-        kind: "memory",
+        kind: entry.kind === "condolence" ? "condolence" : "memory",
         sortKey: parseMemoryDate(memoryDate)?.getTime() ?? Number.MAX_SAFE_INTEGER,
         dateLabel: formatMemoryDate(memoryDate),
-        title: `Memory from ${entry.author ?? entry.name}`,
-        description: entry.memory,
+        title:
+          entry.title ??
+          (entry.kind === "condolence"
+            ? `Condolence from ${entry.author ?? entry.name}`
+            : `Memory from ${entry.author ?? entry.name}`),
+        description: hasMessage ? entry.message : memoryText,
         images: normalizeImages(entry.images),
       };
     }),

@@ -53,6 +53,8 @@ export default function Memories({
   initialEntries,
   enableImages = false,
   enableImageUpload = false,
+  isAdmin = false,
+  showForm = true,
 }) {
   const [entries, setEntries] = useState(initialEntries);
   const [author, setAuthor] = useState("");
@@ -61,7 +63,30 @@ export default function Memories({
   const [imageUrls, setImageUrls] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [error, setError] = useState("");
+  const [moderationError, setModerationError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [updatingEntryId, setUpdatingEntryId] = useState("");
+
+  async function updateModeration(id, patch) {
+    setModerationError("");
+    setUpdatingEntryId(id);
+    try {
+      const res = await fetch(`/api/admin/moderation/memories/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setModerationError(data.error ?? "Could not update memory.");
+        return;
+      }
+      const updated = await res.json();
+      setEntries((prev) => prev.map((entry) => (entry.id === id ? updated : entry)));
+    } finally {
+      setUpdatingEntryId("");
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -121,7 +146,8 @@ export default function Memories({
     <section className={styles.section}>
       <h2 className={styles.heading}>📖 Memories</h2>
 
-      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+      {showForm && (
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <input
           className={styles.input}
           type="text"
@@ -171,7 +197,8 @@ export default function Memories({
         <button className={styles.submitBtn} type="submit" disabled={submitting}>
           {submitting ? "Saving…" : "Share memory"}
         </button>
-      </form>
+        </form>
+      )}
 
       {entries.length > 0 && (
         <ul className={styles.list}>
@@ -199,10 +226,33 @@ export default function Memories({
               >
                 {formatMemoryDate(entry.memoryDate ?? entry.date)}
               </time>
+              {isAdmin && (
+                <div className={styles.adminButtons}>
+                  <button
+                    className={styles.submitBtn}
+                    type="button"
+                    disabled={updatingEntryId === entry.id}
+                    onClick={() => updateModeration(entry.id, { visible: !entry.visible })}
+                  >
+                    {entry.visible ? "Hide" : "Show"}
+                  </button>
+                  <button
+                    className={styles.submitBtn}
+                    type="button"
+                    disabled={updatingEntryId === entry.id}
+                    onClick={() =>
+                      updateModeration(entry.id, { showOnTimeline: !entry.showOnTimeline })
+                    }
+                  >
+                    {entry.showOnTimeline ? "Remove from timeline" : "Show on timeline"}
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
       )}
+      {moderationError && <p className={styles.error}>{moderationError}</p>}
     </section>
   );
 }

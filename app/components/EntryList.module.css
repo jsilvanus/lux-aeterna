@@ -113,3 +113,10 @@
   font-size: 0.75rem;
   color: #999;
 }
+
+.adminButtons {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

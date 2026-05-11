@@ -1,0 +1,113 @@
+.card {
+  width: min(100%, 920px);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  padding: 24px;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.heading {
+  color: #222;
+}
+
+.tabs {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  border: 1px solid #dfdfdf;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.activeTab {
+  border-color: #c9b58d;
+  background: #fdf6ec;
+}
+
+.panel {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.button {
+  border: 1px solid #cab38b;
+  border-radius: 8px;
+  background: #fdf6ec;
+  color: #5c4620;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}

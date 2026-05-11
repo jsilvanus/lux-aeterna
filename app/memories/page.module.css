@@ -1,0 +1,32 @@
+.page {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background: #f4f1ee;
+  padding: 20px;
+}
+
+.main {
+  width: min(100%, 700px);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  padding: 24px;
+}
+
+.title {
+  font-size: 1.8rem;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 14px;
+  border: 1px solid #e9dcc6;
+  border-radius: 8px;
+  background: #fdf6ec;
+  color: #7a5c2e;
+  padding: 6px 10px;
+  font-size: 0.88rem;
+}

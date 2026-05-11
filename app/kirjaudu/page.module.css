@@ -1,0 +1,11 @@
+.page {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background: #f4f1ee;
+  padding: 20px;
+}
+
+.main {
+  width: min(100%, 980px);
+}

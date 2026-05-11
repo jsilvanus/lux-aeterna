@@ -11,12 +11,17 @@ export DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB_NAME"
 Optional feature flags:
 
 ```bash
-# Enable image support for timeline events and memory entries
-export ENABLE_IMAGES=true
-
-# Enable image uploads (data URLs) in memory submission form
-# (requires ENABLE_IMAGES=true)
+# Image URLs are always enabled for timeline and memories.
+# This flag enables image upload (data URLs) in forms/admin.
 export ENABLE_IMAGE_UPLOAD=true
+```
+
+Admin login (for `/kirjaudu`):
+
+```bash
+export ADMIN_PASSWORD="change-me"
+# Optional; defaults to ADMIN_PASSWORD if not set
+export ADMIN_SESSION_SECRET="another-secret"
 ```
 
 Then run the development server:
@@ -32,6 +37,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
 There is also a full timeline view at `/timeline` that renders events in a flowing "snake-like" layout.
+Admin tools live at `/kirjaudu` (login + dashboard tabs for settings, major timeline events, and moderation).
 
 This project uses system fonts (`Arial, Helvetica, sans-serif`) to avoid external font network dependencies.
 
@@ -43,7 +49,8 @@ The app uses PostgreSQL for:
 - condolences (`condolences` table)
 - memories (`memories` table)
 
-Memory entries include author, memory date, and optional image URLs. Timeline events in `content/memorialProfile.js` may also include `image` or `images` fields.
+Memory and condolence entries now support moderation flags (`visible`, `showOnTimeline`) and are persisted in PostgreSQL.
+Major timeline events and main-page settings (images + title links with active toggles) are stored in PostgreSQL and managed from `/kirjaudu`.
 
 Tables are created automatically on first request if they do not exist.
 

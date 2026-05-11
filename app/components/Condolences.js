@@ -3,12 +3,35 @@
 import { useState } from "react";
 import styles from "./EntryList.module.css";
 
-export default function Condolences({ initialEntries }) {
+export default function Condolences({ initialEntries, isAdmin = false, showForm = true }) {
   const [entries, setEntries] = useState(initialEntries);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [moderationError, setModerationError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [updatingEntryId, setUpdatingEntryId] = useState("");
+
+  async function updateModeration(id, patch) {
+    setModerationError("");
+    setUpdatingEntryId(id);
+    try {
+      const res = await fetch(`/api/admin/moderation/condolences/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setModerationError(data.error ?? "Could not update condolence.");
+        return;
+      }
+      const updated = await res.json();
+      setEntries((prev) => prev.map((entry) => (entry.id === id ? updated : entry)));
+    } finally {
+      setUpdatingEntryId("");
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -48,7 +71,8 @@ export default function Condolences({ initialEntries }) {
     <section className={styles.section}>
       <h2 className={styles.heading}>💌 Condolences</h2>
 
-      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+      {showForm && (
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <input
           className={styles.input}
           type="text"
@@ -71,7 +95,8 @@ export default function Condolences({ initialEntries }) {
         <button className={styles.submitBtn} type="submit" disabled={submitting}>
           {submitting ? "Sending…" : "Send condolence"}
         </button>
-      </form>
+        </form>
+      )}
 
       {entries.length > 0 && (
         <ul className={styles.list}>
@@ -86,10 +111,33 @@ export default function Condolences({ initialEntries }) {
                   day: "numeric",
                 })}
               </time>
+              {isAdmin && (
+                <div className={styles.adminButtons}>
+                  <button
+                    className={styles.submitBtn}
+                    type="button"
+                    disabled={updatingEntryId === entry.id}
+                    onClick={() => updateModeration(entry.id, { visible: !entry.visible })}
+                  >
+                    {entry.visible ? "Hide" : "Show"}
+                  </button>
+                  <button
+                    className={styles.submitBtn}
+                    type="button"
+                    disabled={updatingEntryId === entry.id}
+                    onClick={() =>
+                      updateModeration(entry.id, { showOnTimeline: !entry.showOnTimeline })
+                    }
+                  >
+                    {entry.showOnTimeline ? "Remove from timeline" : "Show on timeline"}
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
       )}
+      {moderationError && <p className={styles.error}>{moderationError}</p>}
     </section>
   );
 }
