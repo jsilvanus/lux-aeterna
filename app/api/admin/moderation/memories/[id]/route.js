@@ -7,7 +7,7 @@ export async function PATCH(request, { params }) {
     return unauthorized;
   }
 
-  const { id } = params;
+  const { id } = await params;
   if (!id) {
     return Response.json({ error: "Memory id is required." }, { status: 400 });
   }

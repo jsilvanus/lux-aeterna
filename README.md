@@ -20,8 +20,9 @@ Admin login (for `/kirjaudu`):
 
 ```bash
 export ADMIN_PASSWORD="change-me"
-# Optional; defaults to ADMIN_PASSWORD if not set
 export ADMIN_SESSION_SECRET="another-secret"
+# Optional session lifetime in seconds (default: 43200 = 12h)
+export ADMIN_SESSION_TTL_SECONDS=43200
 ```
 
 Then run the development server:

@@ -233,7 +233,7 @@ export default function AdminPortal({
       <section className={styles.card}>
         <h1 className={styles.heading}>Admin login</h1>
         {!loginConfigured ? (
-          <p className={styles.error}>Set ADMIN_PASSWORD (and optional ADMIN_SESSION_SECRET) first.</p>
+          <p className={styles.error}>Set ADMIN_PASSWORD and ADMIN_SESSION_SECRET first.</p>
         ) : (
           <form className={styles.form} onSubmit={handleLogin}>
             <input
